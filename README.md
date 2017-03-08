@@ -2,7 +2,7 @@
 
 For use our template, checkout the pdf Guide
 
-# License
+## License
 
 ```
 MIT License
