@@ -1,0 +1,702 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%     ___  __  ___ __     __       ___ __    %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%    | | |/     | |_ |\/||__)|   /\ | |_     %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%    | | |\__   | |__|  ||   |__/--\| |__    %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%                                            %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% by Aitor Riba %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage[top=1in, bottom=1in, left=1.25in, right=1.25in]{geometry}
+\usepackage{graphicx}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% For Plots of graphics 2d and 3d %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\IfFileExists{pgfplots.sty}{\usepackage{pgfplots}}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Defining Colors %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{darkgreen}{rgb}{0.08,0.4,0.08}
+\definecolor{darkblue}{rgb}{0.08,0.08,0.4}
+\definecolor{darkred}{rgb}{0.6,0.15,0.15}
+\definecolor{gold}{rgb}{0.8,0.7,0.15}
+\definecolor{silver}{rgb}{0.5,0.5,0.7}
+\definecolor{shadecolor}{rgb}{0.7,0.8,0.8}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codepurple}{rgb}{0.6,0,0.6}
+\definecolor{codebluish}{rgb}{0.4,0.4,0.6}
+\definecolor{codebluish2}{rgb}{0.89,0.89,1}
+\definecolor{codeblue}{rgb}{0,0,1}
+\definecolor{codeyellowish}{rgb}{1,0.95,0.65}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% This package allows cancel commands on maths %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\IfFileExists{cancel.sty}{
+    \usepackage{cancel}}{\usepackage{\string~/.pandoc/packages/cancel}
+}
+
+$if(cancelcolor)$
+\renewcommand{\CancelColor}{\color{$cancelcolor$}}
+$endif$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Code assembler (you should call it as [language=avr]) %%%%%%%%%%%%%%%%%%%%
+
+\usepackage{listings}
+\usepackage{\string~/.pandoc/packages/lstlang}
+
+
+
+\renewcommand\labelitemi{$if(item1)$$item1$$else$$$\bullet$$$endif$}
+\renewcommand\labelitemii{$if(item2)$$item2$$else$$$\circ$$$endif$}
+\renewcommand\labelitemiii{$if(item3)$$item3$$else$$$\diamond$$$endif$}
+\renewcommand\labelitemiv{$if(item4)$$item4$$else$--$endif$}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% This package allows to plot digital circuits %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\IfFileExists{circuitikz.sty}{\usepackage{circuitikz}}{} %% to plot circuits
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% ITIC TEMPLATE COMMANDS %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%% Command 'und' %% for quick underline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\und}[1]{\underline{#1}}
+
+
+%%%%% Command 'cnt' %% for quick centered text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\cnt}[1]{\begin{center}{#1}\end{center}}
+
+
+%%%%% Command 'aline' %% for quick large horizontal line %%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\aline}{
+\begin{center}
+\bigskip
+\rule{130mm}{0.15mm}
+\bigskip
+\end{center}
+}
+
+
+%%%%% Command 'asp' %% for quick spaces %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\asp}{$$\qquad$$}
+
+%%%%% Command 'ar' %% for quick Roghtarrow %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\ar}{$$\Rightarrow$$}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% This package and config allows laplace and invlaplace commands %%%%%%%%%%%
+
+\usepackage{mathrsfs}
+
+\newcommand{\laplace}[1]{
+    \mathscr{L}\left\{#1\right\}
+}
+
+\newcommand{\invlaplace}[1]{
+    \mathscr{L}^{\textsc{-}1}\left\{#1\right\}
+}
+
+\IfFileExists{tcolorbox.sty}{\input{\string~/.pandoc/packages/tcolorbox-commands}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% This package and config allows command toprint %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Use it setting at header toprint: true
+
+\usepackage{afterpage}
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% This package and config allows to render images correctly %%%%%%%%%%%%%%%%
+
+% Overwrite \begin{figure}[htbp] with \begin{figure}[H]
+\usepackage{float}
+\let\origfigure=\figure
+\let\endorigfigure=\endfigure
+\renewenvironment{figure}[1][H]{%
+    \origfigure[#1]
+}{%
+    \endorigfigure
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Code Block style %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(no-codeblock)$
+$else$
+\usepackage{listingsutf8}
+\lstdefinestyle{mystyle}{
+    $if(code-background)$backgroundcolor=\color{$code-background$},$else$backgroundcolor=\color{codebluish2},$endif$
+    $if(code-comments)$commentstyle=\color{$code-comments$},$else$commentstyle=\color{codebluish},$endif$
+    $if(code-keywords)$keywordstyle=\color{$code-keywords$},$else$keywordstyle=\color{codeblue},$endif$
+    $if(code-numbers)$numberstyle=\color{$code-numbers$},$else$numberstyle=\color{codegray},$endif$
+    $if(code-strings)$stringstyle=\color{$code-strings$},$else$stringstyle=\color{codegreen},$endif$
+    basicstyle=$if(code-size)$\$code-size$$else$\footnotesize$endif$\ttfamily,
+    breakatwhitespace=true,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,$if(hide-codelines)$$else$
+    numbers=left,
+    numbersep=5pt,$endif$
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={á}{{\'a}}1 {à}{{\`a}}1 {ã}{{\~a}}1 {é}{{\'e}}1 {è}{{\`e}}1 {í}{{\'i}}1 {ì}{{\`i}}1 {ó}{{\'o}}1 {ò}{{\`o}}1 {ú}{{\'u}}1 {ù}{{\`u}}1}
+
+\lstset{style=mystyle, inputencoding=utf8/latin1}
+\lstnewenvironment{code}{\lstset{style=mystyle}}{}
+$endif$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% WARNING: If you're using texlive instead of texlive-full some words may be %%
+%% old or be obsolete now                                                     %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Language checker for file
+%%cancel is for check if are tex-live full installed
+\IfFileExists{lastpage.sty}{
+$if(lang)$
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[shorthands=off,$for(babel-otherlangs)$$babel-otherlangs$,$endfor$main=$babel-lang$]{babel}
+$if(babel-newcommands)$
+  $babel-newcommands$
+$endif$
+\else
+  \usepackage{polyglossia}
+  \setmainlanguage[$polyglossia-lang.options$]{$polyglossia-lang.name$}
+$for(polyglossia-otherlangs)$
+  \setotherlanguage[$polyglossia-otherlangs.options$]{$polyglossia-otherlangs.name$}
+$endfor$
+\fi
+$endif$
+}{
+$if(lang)$
+\IfFileExists{\string~/.pandoc/languages/$babel-lang$_wr.sty}{}{
+\IfFileExists{\string~/.pandoc/languages/$babel-lang$.sty}{
+\usepackage{\string~/.pandoc/languages/$babel-lang$}}{\Warning
+Unknown lang, [texlive (not-full)] info-> README.pdf}
+}
+
+$endif$
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Packages for frames %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\IfFileExists{framed.sty}{\usepackage{framed}}{\usepackage{\string~/.pandoc/packages/framed}}
+\IfFileExists{mdframed.sty}{\usepackage{mdframed}}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\IfFileExists{lastpage.sty}{\usepackage{lastpage}}{\usepackage{\string~/.pandoc/packages/lastpage}}
+\IfFileExists{anyfontsize.sty}{\usepackage{anyfontsize}}{\usepackage{\string~/.pandoc/packages/anyfontsize}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\graphicspath{ {\string~/.pandoc/images/} }
+$if(fontfamily)$
+\usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
+$else$
+\usepackage{lmodern}
+$endif$
+$if(linestretch)$
+\usepackage{setspace}
+\setstretch{$linestretch$}
+$endif$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
+  \usepackage[utf8]{inputenc}
+$if(euro)$
+  \usepackage{eurosym}
+$endif$
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+$if(euro)$
+  \newcommand{\euro}{€}
+$endif$
+$if(mainfont)$
+    \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
+$endif$
+$if(sansfont)$
+    \setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$]{$sansfont$}
+$endif$
+$if(monofont)$
+    \setmonofont[Mapping=tex-ansi$if(monofontoptions)$,$for(monofontoptions)$$monofontoptions$$sep$,$endfor$$endif$]{$monofont$}
+$endif$
+$if(mathfont)$
+    \setmathfont(Digits,Latin,Greek)[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+$endif$
+$if(CJKmainfont)$
+    \usepackage{xeCJK}
+    \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+$endif$
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+$if(geometry)$
+\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+$endif$
+\usepackage{hyperref}
+$if(colorlinks)$
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+$endif$
+
+\hypersetup{unicode=true,
+$if(title-meta)$
+            pdftitle={$title-meta$},
+$endif$
+$if(author-meta)$
+            pdfauthor={$author-meta$},
+$endif$
+$if(keywords)$
+            pdfkeywords={$for(keywords)$$keywords$$sep$; $endfor$},
+$endif$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$if(autotemp)$
+$if(no-colorlinks)$
+            pdfborder={0 0 0},
+$else$
+            colorlinks=true,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$blue$endif$,
+            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
+            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
+$endif$
+$else$
+$if(colorlinks)$
+            colorlinks=true,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$blue$endif$,
+            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
+            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
+$else$
+            pdfborder={0 0 0},
+$endif$
+$endif$
+            breaklinks=true}
+
+\urlstyle{same}  % don't use monospace font for urls
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(natbib)$
+\usepackage{natbib}
+\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+$endif$
+$if(biblatex)$
+\usepackage$if(biblio-style)$[style=$biblio-style$]$endif${biblatex}
+$if(biblatexoptions)$\ExecuteBibliographyOptions{$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$}$endif$
+$for(bibliography)$
+\addbibresource{$bibliography$}
+$endfor$
+$endif$
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+$if(verbatim-in-note)$
+\usepackage{fancyvrb}
+\VerbatimFootnotes % allows verbatim text in footnotes
+$endif$
+$if(tables)$
+\usepackage{longtable,booktabs}
+$endif$
+$if(graphics)$
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+$endif$
+$if(links-as-notes)$
+% Make links footnotes instead of hotlinks:
+\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
+$endif$
+$if(strikeout)$
+\usepackage[normalem]{ulem}
+% avoid problems with \sout in headers with hyperref:
+\pdfstringdefDisableCommands{\renewcommand{\sout}{}}
+$endif$
+$if(indent)$
+$else$
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+$endif$
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(autotemp)$
+$if(hide-sectnum)$
+\setcounter{secnumdepth}{0}
+$else$
+\setcounter{secnumdepth}{5}
+$endif$
+$else$
+$if(sectnum)$
+\setcounter{secnumdepth}{5}
+$else$
+\setcounter{secnumdepth}{0}
+$endif$
+$endif$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(subparagraph)$
+$else$
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+$endif$
+$if(dir)$
+\ifxetex
+  % load bidi as late as possible as it modifies e.g. graphicx
+  $if(latex-dir-rtl)$
+  \usepackage[RTLdocument]{bidi}
+  $else$
+  \usepackage{bidi}
+  $endif$
+\fi
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \TeXXeTstate=1
+  \newcommand{\RL}[1]{\beginR #1\endR}
+  \newcommand{\LR}[1]{\beginL #1\endL}
+  \newenvironment{RTL}{\beginR}{\endR}
+  \newenvironment{LTR}{\beginL}{\endL}
+\fi
+$endif$
+
+\usepackage{caption}
+
+$for(header-includes)$
+$header-includes$
+$endfor$
+
+$if(title)$
+\title{\vspace*{5cm}{\fontsize{30}{34}\selectfont $title$}$if(subtitle)$\\[1\baselineskip]\LARGE{$subtitle$}$endif$}
+$endif$
+$if(author)$
+\author{$for(author)$\large{\textsc{$author$}}\\[1\baselineskip]$endfor$}
+$endif$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+$if(autotemp)$
+$if(date)$
+\date{\normalsize{$date$}}
+$else$
+$if(hide-autodate)$
+\date{\normalsize{$date$}}
+$else$
+\date{\normalsize{\today}}
+$endif$
+$endif$
+$else$
+$if(autodate)$
+\date{\normalsize{\today}}
+$else$
+\date{\normalsize{$date$}}
+$endif$
+$endif$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(toc-title)$
+\renewcommand*\contentsname{$toc-title$}
+$endif$
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{natbib}
+\bibliographystyle{unsrtnat}
+
+
+\usepackage{fancyhdr}
+$if(autotemp)$
+$if(clear-pages)$
+\pagestyle{empty}
+\fancyhf{}
+\cfoot{}
+$else$
+$if(footer)$
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{$if(wordcolor)$\color{$wordcolor$}$endif$$footer$}
+$else$
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{$if(wordcolor)$\color{$wordcolor$}$endif$\thepage \ $$\Rightarrow$$ {\hypersetup{linkcolor=$if(wordcolor)$$wordcolor$$else$black$endif$}\pageref{LastPage}}}
+$endif$
+$endif$
+$if(header)$
+\chead{$if(wordcolor)$\color{$wordcolor$}$endif$$header$}
+$else$
+$if(hide-authors)$
+\chead{$if(wordcolor)$\color{$wordcolor$}$endif$$title$}
+$else$
+\rhead{$if(wordcolor)$\color{$wordcolor$}$endif$\textsc{$for(author)$ $author$ |$endfor$}}
+\lhead{$if(wordcolor)$\color{$wordcolor$}$endif$$title$}
+$endif$
+$endif$
+$else$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(header)$
+\pagestyle{fancy}
+\fancyhf{}
+\chead{$if(wordcolor)$\color{$wordcolor$}$endif$$header$}
+$if(footer)$
+\cfoot{$if(wordcolor)$\color{$wordcolor$}$endif$$footer$}
+$else$
+\cfoot{$if(wordcolor)$\color{$wordcolor$}$endif$$footer$}
+$endif$
+$else$
+$if(footer)$
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{$if(wordcolor)$\color{$wordcolor$}$endif$$footer$}
+$else$
+\pagestyle{empty}
+\fancyhf{}
+$endif$
+\rhead{}
+
+$endif$
+$endif$
+
+\renewcommand{\headrulewidth}{1pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+
+$if(title)$
+
+$if(autotemp)$
+$if(hide-logo)$
+$else$
+$if(logo-image)$
+\begin{figure}[$if(logo-position)$$logo-position$$else$b$endif$]
+\includegraphics[$if(logo-width)$width=$logo-width$cm,$endif$$if(logo-height)$ height=$logo-height$cm$endif$]{$logo-image$}
+\centering
+\end{figure}
+$else$
+\begin{figure}[$if(logo-position)$$logo-position$$else$b$endif$]
+\includegraphics[$if(logo-width)$width=$logo-width$cm,$else$width=2.5cm,$endif$$if(logo-height)$ height=$logo-height$cm$else$height=2.5cm$endif$]{itic}
+\centering
+\end{figure}
+$endif$
+$endif$
+$else$
+$if(logo)$
+$if(logo-image)$
+\begin{figure}[$if(logo-position)$$logo-position$$else$b$endif$]
+\includegraphics[$if(logo-width)$width=$logo-width$cm,$endif$$if(logo-height)$ height=$logo-height$cm$endif$]{$logo-image$}
+\centering
+\end{figure}
+$else$
+\begin{figure}[$if(logo-position)$$logo-position$$else$b$endif$]
+\includegraphics[$if(logo-width)$width=$logo-width$cm,$else$width=2.5cm,$endif$$if(logo-height)$ height=$logo-height$cm$else$height=2.5cm$endif$]{itic}
+\centering
+\end{figure}
+$endif$
+$endif$
+$endif$
+\maketitle
+\setcounter{page}{0}
+\thispagestyle{empty}
+
+$if(toprint)$
+\afterpage{\blankpage}
+$endif$
+
+$if(front-image)$
+\begin{figure}[h]
+\includegraphics[$if(front-image-width)$width=$front-image-width$cm,$endif$$if(front-image-height)$ height=$front-image-height$cm$endif$]{$front-image$}
+\centering
+$if(front-text)$
+\caption*{$front-text$}
+$endif$
+\end{figure}
+$endif$
+
+\clearpage
+$endif$
+
+$for(include-before)$
+$include-before$
+
+$endfor$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Modification for autoinsert table of contents %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+$if(autotemp)$
+$if(hide-toc)$
+$else$
+{
+$if(no-colorlinks)$
+$else$
+\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$black$endif$}
+$endif$
+\setcounter{tocdepth}{$toc-depth$}
+\tableofcontents
+\thispagestyle{empty}
+$if(toprint)$
+\afterpage{\blankpage}
+$endif$
+}
+\clearpage
+$endif$
+
+$else$
+$if(toc)$
+{
+$if(colorlinks)$
+\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$black$endif$}
+$endif$
+\setcounter{tocdepth}{$toc-depth$}
+\tableofcontents
+\thispagestyle{empty}
+$if(toprint)$
+\afterpage{\blankpage}
+$endif$
+}
+\clearpage
+$endif$
+$endif$
+
+
+
+$if(lot)$
+\listoftables
+$if(toprint)$
+\afterpage{\blankpage}
+$endif$
+\clearpage
+$endif$
+
+$if(lof)$
+\listoffigures
+$if(toprint)$
+\afterpage{\blankpage}
+$endif$
+\clearpage
+$endif$
+
+$if(lol)$
+\lstlistoflistings
+$if(toprint)$
+\afterpage{\blankpage}
+$endif$
+\clearpage
+$endif$
+
+$if(pagecolor)$
+\pagecolor{$pagecolor$}
+$endif$
+
+$if(wordcolor)$
+\color{$wordcolor$}
+$endif$
+
+$body$
+
+$if(natbib)$
+$if(bibliography)$
+$if(biblio-title)$
+$if(book-class)$
+\renewcommand\bibname{$biblio-title$}
+$else$
+\renewcommand\refname{$biblio-title$}
+$endif$
+$endif$
+\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+
+$endif$
+$endif$
+$if(biblatex)$
+\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+
+$endif$
+$for(include-after)$
+$include-after$
+$endfor$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

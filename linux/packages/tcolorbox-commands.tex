@@ -1,0 +1,65 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% This package and config allows fancyboxed(rb) command %%%%%%%%%%%%%%%%%%%%
+
+\usepackage[skins,theorems]{tcolorbox}
+\tcbset{highlight math style={enhanced,
+colframe=red,colback=white,arc=0pt,boxrule=1pt}}
+
+\newcommand{\fboxed}[1]{
+\tcbhighmath[fuzzy halo=1mm with blue!50!white,arc=2pt,
+boxrule=0pt,frame hidden]{#1}
+}
+
+\newcommand{\ffboxed}[2]{
+    \tcboxmath{#1}
+}
+
+\newcommand{\fcboxed}[2]{
+    \tcbhighmath[fuzzy halo=1mm with #1,arc=2pt,boxrule=0pt,frame hidden]{#2}
+}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% This package and config allows fail, warning, succes and info boxes %%%%%%
+
+    \usepackage{tcolorbox}
+
+\newtcolorbox{redbb}[1]{
+    colback=red!5!white,colframe=red!75!black,fonttitle=\bfseries,title=#1
+}
+\newcommand{\redbox}[2]{
+\begin{redbb}{#1}#2 \end{redbb}
+}
+
+
+\newtcolorbox{greenbb}[1]{
+    colback=green!5!white,colframe=green!75!black,fonttitle=\bfseries,title=#1
+}
+\newcommand{\greenbox}[2]{
+\begin{greenbb}{#1}#2 \end{greenbb}
+}
+
+
+\newtcolorbox{yellowbb}[1]{
+    colback=yellow!5!white,colframe=yellow!75!black,fonttitle=\bfseries,title=#1
+}
+\newcommand{\yellowbox}[2]{
+\begin{yellowbb}{#1}#2 \end{yellowbb}
+}
+
+
+\newtcolorbox{bluebb}[1]{
+    colback=blue!5!white,colframe=blue!75!black,fonttitle=\bfseries,title=#1
+}
+\newcommand{\bluebox}[2]{
+\begin{bluebb}{#1}#2 \end{bluebb}
+}
+
+
+\newtcolorbox{colorbb}[3]{colback=#1 ,colframe=#2,fonttitle=\bfseries,title=#3}
+\newcommand{\coloredbox}[4]{
+\begin{colorbb}{#3}{#1}{#2} #4 \end{colorbb}
+}
