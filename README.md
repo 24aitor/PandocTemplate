@@ -1,4 +1,11 @@
-# Pandoc template
+<h1 align="center">Pandoc template</h1>
+
+<p align="center">
+    <a href="https://raw.githubusercontent.com/24aitor/PandocTemplate/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+    <a href="https://github.com/jgm/pandoc"><img src="https://img.shields.io/badge/Built%20For-Pandoc-orange.svg" alt="License"></a>
+
+</p>
+
 
 For use our template, checkout the pdf Guide
 
