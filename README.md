@@ -7,7 +7,7 @@
 </p>
 
 
-For use our template, checkout the pdf Guide
+To use our template, check out the [pdf guide](https://github.com/24aitor/PandocTemplate/blob/master/Guide.pdf).
 
 ## License
 
