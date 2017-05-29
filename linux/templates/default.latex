@@ -160,9 +160,11 @@ $else$
     $if(code-keywords)$keywordstyle=\color{$code-keywords$},$else$keywordstyle=\color{codeblue},$endif$
     $if(code-numbers)$numberstyle=\color{$code-numbers$},$else$numberstyle=\color{codegray},$endif$
     $if(code-strings)$stringstyle=\color{$code-strings$},$else$stringstyle=\color{codegreen},$endif$
-    basicstyle=$if(code-size)$\$code-size$$else$\footnotesize$endif$\ttfamily,
-    breakatwhitespace=true,
-    breaklines=true,
+    basicstyle=$if(code-size)$\$code-size$$else$\footnotesize$endif$\ttfamily,$if(code-forcebreak)$
+    breakatwhitespace=false,$else$
+    breakatwhitespace=true,$endif$$if(code-nobreak)$
+    breaklines=false,$else$
+    breaklines=true,$endif$
     captionpos=b,
     keepspaces=true,$if(hide-codelines)$$else$
     numbers=left,
