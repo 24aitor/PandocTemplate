@@ -1,3 +1,6 @@
+<p align="center"><img height="250" src="https://i.imgur.com/iu4w9nt.png"></p>
+
+
 <h1 align="center">Pandoc template</h1>
 
 <p align="center">
